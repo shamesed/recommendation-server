@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from google import genai
 import os
 import pathlib
+import re
 from google.genai import types
 import json
 import traceback
@@ -78,19 +79,30 @@ def recommend(data: WeatherData):
                 system_instruction=SYSTEM_INSTRUCTION
             ),
             contents=[
-            types.Part.from_bytes(
-                data=filepath.read_bytes(),
-                mime_type='application/pdf',
-            )
-                    ]
+                types.Part.from_bytes(
+                    data=filepath.read_bytes(),
+                    mime_type='application/pdf',
+                )
+            ]
         )
 
-        return {"recommendation": response.text}
+        # --- Обработка текста ответа ---
+        raw_text = extract_text_from_response(response)
+        cleaned = re.sub(r"^```json\s*|\s*```$", "", raw_text.strip(), flags=re.DOTALL)
+
+        try:
+            parsed = json.loads(cleaned)
+        except Exception:
+            parsed = extract_json_substring(cleaned)  # твоя fallback-функция
+            if not parsed:
+                return {
+                    "error": "Invalid JSON response",
+                    "raw": raw_text
+                }
+
+        # --- Вот тут добавляем return ---
+        return {"recommendation": parsed}
 
     except Exception as e:
-        import traceback
         traceback.print_exc()
         return {"error": str(e)}
-
-
-
