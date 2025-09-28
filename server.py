@@ -87,7 +87,7 @@ def recommend(data: WeatherData):
         )
 
         # --- Обработка текста ответа ---
-        raw_text = extract_text_from_response(response)
+        raw_text = response.text
         cleaned = re.sub(r"^```json\s*|\s*```$", "", raw_text.strip(), flags=re.DOTALL)
 
         try:
@@ -106,3 +106,4 @@ def recommend(data: WeatherData):
     except Exception as e:
         traceback.print_exc()
         return {"error": str(e)}
+
