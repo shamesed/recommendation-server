@@ -84,18 +84,10 @@ def recommend(data: WeatherData):
                     ]
         )
 
-        # Попытка распарсить JSON
-        try:
-            rec = json.loads(response.text)
-        except Exception:
-            rec = {
-                "error": "Invalid JSON response",
-                "raw": response.text
-            }
-
-        return {"recommendation": rec}
+        return {"recommendation": response.text}
 
     except Exception as e:
         import traceback
         traceback.print_exc()
         return {"error": str(e)}
+
