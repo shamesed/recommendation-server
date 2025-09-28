@@ -72,9 +72,9 @@ def recommend(data: WeatherData):
         """
 
         response = client.models.generate_content(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
             model="gemini-2.5-flash",
-            config=types.GenerateContentConfig(
+            config=types.GenerateContentConfig(   
+                thinking_config=types.ThinkingConfig(thinking_budget=0),
                 system_instruction=SYSTEM_INSTRUCTION
             ),
             contents=[
@@ -91,5 +91,6 @@ def recommend(data: WeatherData):
         import traceback
         traceback.print_exc()
         return {"error": str(e)}
+
 
 
