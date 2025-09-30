@@ -58,7 +58,7 @@ class WeatherData(BaseModel):
 #%%
 # Retrieve and encode the PDF byte
 
-filepath = pathlib.Path('recommend_study.pdf')
+filepath = pathlib.Path('ML.pdf')
 
 #%%
 
@@ -106,4 +106,5 @@ def recommend(data: WeatherData):
     except Exception as e:
         traceback.print_exc()
         return {"error": str(e)}
+
 
